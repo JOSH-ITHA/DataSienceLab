@@ -1,0 +1,453 @@
+/* ==========================================================================
+   DATA SCIENCE SUBJECT DIGITAL LIBRARY - EXPERIMENT & CODE EDITOR STYLES
+   ========================================================================== */
+
+/* Experiment Workspace Container */
+.experiment-workspace {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+/* Experiment Top Header Card */
+.exp-header-card {
+  background: var(--bg-surface);
+  border-radius: var(--radius-xl);
+  padding: 1.75rem 2rem;
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.exp-header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.exp-breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.exp-breadcrumbs a {
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.exp-breadcrumbs a:hover {
+  color: var(--primary);
+}
+
+.exp-main-title {
+  font-family: var(--font-heading);
+  font-size: 1.85rem;
+  font-weight: 800;
+  color: var(--text-main);
+  line-height: 1.25;
+}
+
+.exp-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+/* Academic Section Cards (Aim, Requirements, Procedure, Result, References) */
+.academic-section-card {
+  background: var(--bg-surface);
+  border-radius: var(--radius-xl);
+  padding: 1.75rem 2rem;
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-card);
+}
+
+.section-card-title {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-heading);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 1rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.section-card-title svg {
+  color: var(--primary);
+  width: 20px;
+  height: 20px;
+}
+
+/* Aim Callout */
+.aim-box {
+  background: rgba(139, 92, 246, 0.08);
+  border-left: 4px solid var(--primary);
+  padding: 1.1rem 1.4rem;
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  font-size: 0.95rem;
+  color: var(--text-main);
+  line-height: 1.6;
+  font-weight: 500;
+}
+
+/* Requirements Tags Grid */
+.requirements-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+}
+
+.req-group {
+  background: var(--bg-page);
+  padding: 1rem 1.25rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+}
+
+.req-group-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+}
+
+.req-chips-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.req-chip {
+  font-size: 0.775rem;
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-medium);
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--radius-full);
+  color: var(--accent-cyan);
+  font-weight: 600;
+}
+
+/* Procedure Step-by-Step */
+.procedure-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.procedure-step-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 0.85rem 1rem;
+  background: var(--bg-page);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+}
+
+.step-num {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 0.825rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.step-text {
+  font-size: 0.9rem;
+  color: var(--text-main);
+  line-height: 1.55;
+}
+
+/* --------------------------------------------------------------------------
+   CODE EDITOR WORKSPACE
+   -------------------------------------------------------------------------- */
+.code-editor-container {
+  background: #0f172a;
+  border-radius: var(--radius-xl);
+  border: 1px solid #334155;
+  box-shadow: var(--shadow-xl);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.editor-toolbar {
+  background: #1e293b;
+  padding: 0.85rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #334155;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.editor-title-group {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.window-dots {
+  display: flex;
+  gap: 6px;
+}
+
+.window-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+.dot-red { background: #ef4444; }
+.dot-yellow { background: #f59e0b; }
+.dot-green { background: #10b981; }
+
+.editor-lang-tag {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #94a3b8;
+  background: #0f172a;
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid #334155;
+}
+
+.pyodide-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.725rem;
+  font-weight: 600;
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.1);
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--radius-full);
+  border: 1px solid rgba(56, 189, 248, 0.2);
+}
+
+.editor-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.editor-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 0.85rem;
+  border-radius: var(--radius-md);
+  font-size: 0.8rem;
+  font-weight: 600;
+  transition: all var(--transition-fast);
+}
+
+.editor-btn-run {
+  background: #10b981;
+  color: #ffffff;
+  box-shadow: 0 2px 6px rgba(16, 185, 129, 0.3);
+}
+
+.editor-btn-run:hover {
+  background: #059669;
+  transform: translateY(-1px);
+}
+
+.editor-btn-secondary {
+  background: #334155;
+  color: #e2e8f0;
+}
+
+.editor-btn-secondary:hover {
+  background: #475569;
+  color: #ffffff;
+}
+
+/* Editor Main Input Area */
+.editor-main-area {
+  display: flex;
+  position: relative;
+  min-height: 280px;
+  background: #0f172a;
+}
+
+.line-numbers-gutter {
+  width: 48px;
+  padding: 1rem 0.5rem;
+  background: #090d16;
+  color: #475569;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  line-height: 1.6;
+  text-align: right;
+  user-select: none;
+  border-right: 1px solid #1e293b;
+}
+
+.editor-textarea {
+  flex: 1;
+  background: transparent;
+  color: #f8fafc;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  line-height: 1.6;
+  padding: 1rem;
+  border: none;
+  resize: vertical;
+  min-height: 280px;
+  tab-size: 4;
+  outline: none;
+  white-space: pre;
+  overflow-x: auto;
+}
+
+.editor-textarea::selection {
+  background: #2563eb;
+  color: #ffffff;
+}
+
+/* Terminal Output Panel */
+.terminal-output-container {
+  background: #090d16;
+  border-top: 1px solid #1e293b;
+  display: flex;
+  flex-direction: column;
+}
+
+.terminal-header {
+  padding: 0.65rem 1.25rem;
+  background: #131b2e;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #1e293b;
+}
+
+.terminal-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.775rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #94a3b8;
+}
+
+.terminal-body {
+  padding: 1.25rem;
+  min-height: 120px;
+  max-height: 380px;
+  overflow-y: auto;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  line-height: 1.55;
+  color: #38bdf8;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.terminal-body.has-error {
+  color: #f87171;
+  background: rgba(239, 68, 68, 0.05);
+}
+
+.terminal-prompt-line {
+  color: #64748b;
+  user-select: none;
+  margin-right: 0.5rem;
+}
+
+/* Expected Output & Result Cards */
+.expected-output-card {
+  background: #f8fafc;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-medium);
+  padding: 1.25rem;
+}
+
+.expected-output-pre {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  background: #ffffff;
+  padding: 1rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+  color: #1e293b;
+  white-space: pre-wrap;
+}
+
+.result-card {
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  border-radius: var(--radius-lg);
+  padding: 1.25rem 1.5rem;
+  color: #065f46;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.result-card strong {
+  color: #047857;
+}
+
+/* Reference links list */
+.references-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  list-style: none;
+}
+
+.reference-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.reference-item a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-weight: 500;
+}
+
+/* Responsive adjustments for code editor */
+@media (max-width: 768px) {
+  .exp-header-card, .academic-section-card {
+    padding: 1.25rem;
+  }
+  .exp-main-title {
+    font-size: 1.35rem;
+  }
+  .editor-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .editor-actions {
+    justify-content: flex-start;
+  }
+}

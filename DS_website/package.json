@@ -1,0 +1,20 @@
+{
+  "name": "data-science-subject-digital-library",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Interactive Data Science Subject Digital Library & Virtual Lab for College Mini Project",
+  "main": "index.html",
+  "scripts": {
+    "dev": "npx serve . -l 3000",
+    "start": "npx serve . -l 3000"
+  },
+  "keywords": [
+    "data-science",
+    "digital-library",
+    "virtual-lab",
+    "python",
+    "college-project"
+  ],
+  "author": "Upati Joshitha",
+  "license": "MIT"
+}
