@@ -5,12 +5,7 @@
 
 import { renderNavbar } from './components/navbar.js';
 import { setupProfileModal, setupResumeModal } from './components/profileCard.js';
-import { renderHomePage, attachHomePageListeners } from './pages/homePage.js';
-import { renderModulesPage, attachModulesPageListeners } from './pages/modulesPage.js';
-import { renderExperimentsPage, attachExperimentsPageListeners } from './pages/experimentsPage.js';
-import { renderExperimentDetailPage, attachExperimentDetailPageListeners } from './pages/experimentDetailPage.js';
-import { renderToolsPage, attachToolsPageListeners } from './pages/toolsPage.js';
-import { PyodideEngine } from './pyodideRunner.js';
+import { setupGlobalSearch } from './components/globalSearch.js';
 
 class App {
   constructor() {
@@ -19,6 +14,8 @@ class App {
     this.currentParam = null;
     this.profileModal = null;
     this.resumeModal = null;
+    this.pendingModuleSearchId = null;
+    this.routeRenderId = 0;
   }
 
   init() {
@@ -44,10 +41,6 @@ class App {
     // Initial Routing
     this.handleRoute();
 
-    // Background warmup of Pyodide
-    setTimeout(() => {
-      PyodideEngine.loadPyodideEngine().catch(e => console.log("Pyodide warmup note:", e));
-    }, 1500);
   }
 
   parseHash() {
@@ -59,7 +52,8 @@ class App {
     return { route: rawHash, param: null };
   }
 
-  handleRoute() {
+  async handleRoute() {
+    const renderId = ++this.routeRenderId;
     const { route, param } = this.parseHash();
     this.currentRoute = route;
     this.currentParam = param;
@@ -67,48 +61,112 @@ class App {
     // Determine navbar active identifier
     let navActive = route;
     if (route === 'experiment-detail') navActive = 'experiments';
-    if (!['home', 'modules', 'experiments', 'tools'].includes(navActive)) {
+    if (!['home', 'modules', 'experiments', 'tools', 'resources', 'projects'].includes(navActive)) {
       navActive = 'home';
     }
 
     // Render Navigation
     renderNavbar(navActive);
+    setupGlobalSearch(result => {
+      if (result.type === 'Module') {
+        this.pendingModuleSearchId = result.id;
+        if (this.currentRoute === 'modules') {
+          import('./components/moduleCard.js').then(({ openModuleDetailModal }) => {
+            if (this.currentRoute === 'modules') openModuleDetailModal(result.id);
+          });
+        } else {
+          window.location.hash = '#modules';
+        }
+      } else if (result.type === 'Experiment') {
+        window.location.hash = `#experiment/${encodeURIComponent(result.id)}`;
+      } else {
+        window.open(result.link, '_blank', 'noopener,noreferrer');
+      }
+    });
 
     // Scroll to top
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: 'instant' });
 
     // Render View
-    switch (route) {
-      case 'home':
-        this.appRoot.innerHTML = renderHomePage();
-        attachHomePageListeners();
+    try {
+      switch (route) {
+      case 'home': {
+        const page = await import('./pages/homePage.js');
+        if (renderId !== this.routeRenderId) return;
+        this.appRoot.innerHTML = page.renderHomePage();
+        page.attachHomePageListeners();
         break;
+      }
 
-      case 'modules':
-        this.appRoot.innerHTML = renderModulesPage();
-        attachModulesPageListeners(() => this.handleRoute());
+      case 'modules': {
+        const page = await import('./pages/modulesPage.js');
+        if (renderId !== this.routeRenderId) return;
+        this.appRoot.innerHTML = page.renderModulesPage();
+        page.attachModulesPageListeners(() => this.handleRoute());
+        if (this.pendingModuleSearchId) {
+          const { openModuleDetailModal } = await import('./components/moduleCard.js');
+          if (renderId !== this.routeRenderId) return;
+          openModuleDetailModal(this.pendingModuleSearchId);
+          this.pendingModuleSearchId = null;
+        }
         break;
+      }
 
-      case 'experiments':
-        this.appRoot.innerHTML = renderExperimentsPage();
-        attachExperimentsPageListeners(() => this.handleRoute());
+      case 'experiments': {
+        const page = await import('./pages/experimentsPage.js');
+        if (renderId !== this.routeRenderId) return;
+        this.appRoot.innerHTML = page.renderExperimentsPage();
+        page.attachExperimentsPageListeners(() => this.handleRoute());
         break;
+      }
 
-      case 'experiment-detail':
-        this.appRoot.innerHTML = renderExperimentDetailPage(param);
-        attachExperimentDetailPageListeners(param, (targetHash) => {
+      case 'experiment-detail': {
+        const page = await import('./pages/experimentDetailPage.js');
+        if (renderId !== this.routeRenderId) return;
+        this.appRoot.innerHTML = page.renderExperimentDetailPage(param);
+        page.attachExperimentDetailPageListeners(param, (targetHash) => {
           window.location.hash = targetHash;
         });
         break;
+      }
 
-      case 'tools':
-        this.appRoot.innerHTML = renderToolsPage();
-        attachToolsPageListeners(() => this.handleRoute());
+      case 'tools': {
+        const page = await import('./pages/toolsPage.js');
+        if (renderId !== this.routeRenderId) return;
+        this.appRoot.innerHTML = page.renderToolsPage();
+        page.attachToolsPageListeners(() => this.handleRoute());
         break;
+      }
 
-      default:
-        window.location.hash = '#home';
+      case 'resources': {
+        const page = await import('./pages/resourcesPage.js');
+        if (renderId !== this.routeRenderId) return;
+        this.appRoot.innerHTML = page.renderResourcesPage();
         break;
+      }
+
+      case 'projects': {
+        const page = await import('./pages/projectsPage.js');
+        if (renderId !== this.routeRenderId) return;
+        this.appRoot.innerHTML = page.renderProjectsPage();
+        break;
+      }
+
+        default:
+          window.location.hash = '#home';
+          break;
+      }
+    } catch (error) {
+      if (renderId !== this.routeRenderId) return;
+      console.error(`Unable to load the ${route} page:`, error);
+      this.appRoot.innerHTML = `
+        <div class="container fade-in">
+          <div class="empty-state">
+            <h2 class="empty-state-title">This page could not be loaded</h2>
+            <p class="empty-state-text">Please check your connection and try navigating here again.</p>
+          </div>
+        </div>
+      `;
     }
   }
 }

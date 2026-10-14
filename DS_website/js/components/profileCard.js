@@ -12,9 +12,18 @@ export function renderProfileCard() {
   return `
     <div class="student-id-card">
       <div class="id-card-header-bar">
-        <div class="id-card-college-row">
-          <span class="id-card-badge-tag">OFFICIAL ID</span>
-          <span class="id-card-dept-tag">DEPT. OF ${student.department.toUpperCase()}</span>
+        <div style="display:flex; align-items:flex-start; justify-content:space-between; width:100%;">
+          <div class="id-card-college-row">
+            <span class="id-card-badge-tag">OFFICIAL ID</span>
+            <span class="id-card-dept-tag">DEPT. OF ${student.department.toUpperCase()}</span>
+          </div>
+          <img
+            src="assets/images/mbu-logo.png"
+            alt="Mohan Babu University Logo"
+            class="id-card-mbu-logo"
+            onerror="this.style.display='none'"
+            title="Mohan Babu University"
+          >
         </div>
         <div style="font-size: 0.8rem; opacity: 0.9; font-weight: 600;">ACADEMIC DIGITAL IDENTITY</div>
       </div>
@@ -184,76 +193,102 @@ export function setupResumeModal() {
 
   const student = Storage.getStudent();
 
-  const skillsHtml = student.skills.map(s => `
-    <span class="badge badge-primary" style="font-size:0.8rem; padding:0.35rem 0.75rem;">
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-      ${s}
-    </span>
+  const resume = student.resume || {};
+  const displayName = resume.fullName || student.name;
+  const skillGroups = resume.skillGroups || [{ category: 'Technical Skills', skills: student.skills || [] }];
+  const skillsHtml = skillGroups.map(group => `
+    <section class="resume-skill-group">
+      <h4>${group.category}</h4>
+      <div class="resume-skill-tags">
+        ${group.skills.map(skill => `<span>${skill}</span>`).join('')}
+      </div>
+    </section>
   `).join('');
+  const educationHtml = (resume.education || []).map(education => `
+    <article class="resume-entry">
+      <div class="resume-entry-heading">
+        <h4>${education.degree}</h4>
+        <span>${education.period}</span>
+      </div>
+      <p class="resume-entry-subtitle">${education.institution}</p>
+      <p>${education.details}</p>
+    </article>
+  `).join('');
+  const projectsHtml = (resume.projects || []).map(project => `
+    <article class="resume-entry">
+      <h4>${project.title}</h4>
+      <p>${project.description}</p>
+    </article>
+  `).join('');
+  const certificationsHtml = (resume.certifications || []).map(certification => `
+    <article class="resume-entry">
+      <div class="resume-entry-heading">
+        <h4>${certification.name}</h4>
+        <span>${certification.issuer}</span>
+      </div>
+      <p>${certification.details}</p>
+    </article>
+  `).join('');
+  const softSkillsHtml = (resume.softSkills || []).map(skill => `<span>${skill}</span>`).join('');
 
   modalOverlay.innerHTML = `
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-lg resume-modal-dialog">
       <div class="modal-header">
         <div style="display:flex; align-items:center; gap:0.6rem;">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-          <h3 class="modal-title">About Me & Academic Resume</h3>
+          <h3 class="modal-title">Professional Resume</h3>
         </div>
         <button class="modal-close-btn" id="btn-close-resume-modal" aria-label="Close resume modal">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </button>
       </div>
 
-      <div class="modal-body">
-        <!-- Resume Header Card -->
-        <div style="background:var(--bg-page); padding:1.25rem 1.5rem; border-radius:var(--radius-lg); border:1px solid var(--border-subtle); margin-bottom:1.5rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
-          <div>
-            <h2 style="font-family:var(--font-heading); font-size:1.45rem; font-weight:800; color:var(--text-main);">${student.name}</h2>
-            <div style="font-size:0.875rem; color:var(--primary); font-weight:600;">Data Science Undergraduate • Roll No: ${student.rollNo}</div>
-            <div style="font-size:0.825rem; color:var(--text-muted); margin-top:0.25rem;">Department of ${student.department} (Sec ${student.section}) • Mentor: ${student.faculty} (${student.designation})</div>
-          </div>
-          <div style="display:flex; gap:0.5rem;">
-            <a href="${student.linkedin}" target="_blank" class="btn btn-secondary btn-sm">LinkedIn ↗</a>
-            <a href="${student.github}" target="_blank" class="btn btn-secondary btn-sm">GitHub ↗</a>
-          </div>
-        </div>
+      <div class="modal-body resume-modal-body">
+        <article class="resume-document">
+          <header class="resume-document-header">
+            <div class="resume-eyebrow">Software Development · Data Science · Cloud</div>
+            <h1>${displayName}</h1>
+            <p class="resume-headline">${resume.headline || `B.Tech Student in ${student.department}`}</p>
+            <div class="resume-contact-row">
+              <span>${student.institution}</span>
+              <span>B.Tech ${student.department} · ${student.academicYear} · ${student.rollNo}</span>
+            </div>
+            <div class="resume-link-row">
+              <a href="${student.linkedin}" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+              <a href="${student.github}" target="_blank" rel="noopener noreferrer">GitHub</a>
+            </div>
+          </header>
 
-        <!-- About Me Section -->
-        <div style="margin-bottom:1.5rem;">
-          <h4 style="font-size:1rem; font-weight:700; color:var(--text-main); margin-bottom:0.5rem; display:flex; align-items:center; gap:0.4rem;">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-            About Me
-          </h4>
-          <p style="font-size:0.9rem; color:var(--text-muted); line-height:1.65; background:var(--bg-page); border:1px solid var(--border-subtle); padding:1rem 1.25rem; border-radius:var(--radius-md);">
-            ${student.aboutMe}
-          </p>
-        </div>
+          <section class="resume-section">
+            <h2>Professional Summary</h2>
+            <p>${resume.summary || student.aboutMe}</p>
+          </section>
 
-        <!-- Technical Skills Section -->
-        <div style="margin-bottom:1.5rem;">
-          <h4 style="font-size:1rem; font-weight:700; color:var(--text-main); margin-bottom:0.65rem; display:flex; align-items:center; gap:0.4rem;">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-            Technical & Domain Skills
-          </h4>
-          <div style="display:flex; flex-wrap:wrap; gap:0.5rem;">
-            ${skillsHtml}
-          </div>
-        </div>
+          <section class="resume-section">
+            <h2>Technical Skills</h2>
+            <div class="resume-skill-groups">${skillsHtml}</div>
+          </section>
 
-        <!-- Academic Projects -->
-        <div style="margin-bottom:1rem;">
-          <h4 style="font-size:1rem; font-weight:700; color:var(--text-main); margin-bottom:0.65rem; display:flex; align-items:center; gap:0.4rem;">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
-            Academic Coursework & Projects
-          </h4>
-          <div style="display:flex; flex-direction:column; gap:0.75rem;">
-            ${student.resume.projects.map(p => `
-              <div style="background:var(--bg-page); padding:0.9rem 1.15rem; border-radius:var(--radius-md); border:1px solid var(--border-subtle);">
-                <div style="font-weight:700; font-size:0.925rem; color:var(--text-main);">${p.title}</div>
-                <div style="font-size:0.85rem; color:var(--text-muted); margin-top:0.25rem;">${p.description}</div>
-              </div>
-            `).join('')}
-          </div>
-        </div>
+          <section class="resume-section">
+            <h2>Selected Projects</h2>
+            <div class="resume-entries">${projectsHtml}</div>
+          </section>
+
+          <section class="resume-section">
+            <h2>Education</h2>
+            <div class="resume-entries">${educationHtml}</div>
+          </section>
+
+          <section class="resume-section">
+            <h2>Certifications & Credentials</h2>
+            <div class="resume-entries">${certificationsHtml}</div>
+          </section>
+
+          <section class="resume-section">
+            <h2>Professional Strengths</h2>
+            <div class="resume-soft-skills">${softSkillsHtml}</div>
+          </section>
+        </article>
       </div>
 
       <div class="modal-footer" style="justify-content:space-between;">
@@ -281,40 +316,55 @@ export function setupResumeModal() {
 
   // Print/View Resume action
   document.getElementById('btn-print-resume').onclick = () => {
+    const cleanup = () => document.body.classList.remove('resume-printing');
+    document.body.classList.add('resume-printing');
+    window.addEventListener('afterprint', cleanup, { once: true });
     window.print();
+    window.setTimeout(cleanup, 60000);
   };
 
-  // Download Resume action (generates clean markdown/text resume or formatted PDF text file)
+  // Download a self-contained resume document that can be printed or saved as PDF.
   document.getElementById('btn-download-resume').onclick = () => {
-    const resumeText = `=====================================================
-${student.name.toUpperCase()} - ACADEMIC RESUME
-=====================================================
-Roll Number : ${student.rollNo}
-Department  : ${student.department} (Section ${student.section})
-Subject     : ${student.subject}
-Institution : ${student.institution}
-Faculty     : ${student.faculty} (${student.designation})
-LinkedIn    : ${student.linkedin}
-GitHub      : ${student.github}
-
-ABOUT ME:
-${student.aboutMe}
-
-TECHNICAL SKILLS:
-${student.skills.map(s => `• ${s}`).join('\n')}
-
-ACADEMIC PROJECTS:
-${student.resume.projects.map(p => `• ${p.title}\n  ${p.description}`).join('\n\n')}
-=====================================================`;
-
-    const blob = new Blob([resumeText], { type: 'text/plain;charset=utf-8' });
+    const resumeDocument = modalOverlay.querySelector('.resume-document');
+    if (!resumeDocument) {
+      console.error('Could not find the rendered resume document to download.');
+      Toast.error('The resume could not be downloaded. Please reopen it and try again.');
+      return;
+    }
+    const resumeStyles = `
+      @page{size:A4;margin:16mm}
+      *{box-sizing:border-box}
+      body{margin:0;background:#fff;color:#1e293b;font:10pt/1.55 Arial,Helvetica,sans-serif}
+      .resume-document{max-width:850px;margin:0 auto;padding:32px;background:#fff;color:#1e293b}
+      .resume-document-header{padding:0 0 18px;border-bottom:3px solid #4f46e5}
+      .resume-eyebrow{color:#4f46e5;font-size:9pt;font-weight:bold;letter-spacing:.1em;text-transform:uppercase}
+      .resume-document-header h1{margin:6px 0;font-size:27pt;line-height:1.1;color:#111827}
+      .resume-headline{margin:0 0 10px;color:#4338ca;font-size:12pt;font-weight:bold}
+      .resume-contact-row,.resume-link-row{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:9pt;color:#475569}
+      .resume-link-row{margin-top:7px}.resume-link-row a{color:#4338ca;text-decoration:none}
+      .resume-section{margin-top:18px;break-inside:avoid}
+      .resume-section h2{margin:0 0 8px;padding-bottom:4px;border-bottom:1px solid #cbd5e1;color:#312e81;font-size:13pt}
+      .resume-section p{margin:4px 0}
+      .resume-skill-group{margin:8px 0}
+      .resume-skill-group h4{margin:0 0 5px;color:#334155;font-size:9pt}
+      .resume-skill-tags,.resume-soft-skills{display:flex;flex-wrap:wrap;gap:5px}
+      .resume-skill-tags span,.resume-soft-skills span{padding:3px 8px;border:1px solid #cbd5e1;border-radius:12px;background:#f8fafc;font-size:8.5pt}
+      .resume-entry{margin:0 0 10px;break-inside:avoid}
+      .resume-entry h4{margin:0;color:#1e293b;font-size:10pt}
+      .resume-entry p{color:#475569}
+      .resume-entry-heading{display:flex;justify-content:space-between;gap:12px}
+      .resume-entry-heading span,.resume-entry-subtitle{color:#4f46e5;font-size:9pt;font-weight:bold}
+      @media print{.resume-document{padding:0}}
+    `;
+    const resumeHtml = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${displayName} — Resume</title><style>${resumeStyles}</style></head><body>${resumeDocument.outerHTML}</body></html>`;
+    const blob = new Blob([resumeHtml], { type: 'text/html;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `Resume_${student.name.replace(/\s+/g, '_')}_${student.rollNo}.txt`;
+    link.download = `Resume_${displayName.replace(/\s+/g, '_')}_${student.rollNo}.html`;
     link.click();
-    URL.revokeObjectURL(url);
-    Toast.success("Resume downloaded successfully!");
+    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+    Toast.success("Formatted resume downloaded. Open it and print or save as PDF.");
   };
 
   return { open, close };

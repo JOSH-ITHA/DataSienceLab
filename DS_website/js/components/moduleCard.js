@@ -5,6 +5,14 @@
 import { Storage } from '../data/storage.js';
 import { Toast } from './toast.js';
 
+const localModulePdfs = {
+  'mod-1': 'assets/pdfs/module-1-introduction-to-data-science.pdf',
+  'mod-2': 'assets/pdfs/module-2-data-extraction.pdf',
+  'mod-3': 'assets/pdfs/module-3-study-guide.pdf',
+  'mod-4': 'assets/pdfs/module-4-study-guide.pdf',
+  'mod-5': 'assets/pdfs/module-5-study-guide.pdf'
+};
+
 export function renderModuleCard(module) {
   let progressBadge = '';
   if (module.progress === 'completed' || module.completed) {
@@ -57,14 +65,6 @@ export function renderModuleCard(module) {
               <button class="btn btn-primary btn-sm btn-view-module" data-id="${module.id}">
                 VIEW MORE
               </button>
-              <div style="display:flex; gap:0.3rem;">
-                <button class="btn btn-secondary btn-sm btn-edit-module" data-id="${module.id}" title="Edit Module">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-                </button>
-                <button class="btn btn-secondary btn-sm btn-delete-module" data-id="${module.id}" title="Delete Module" style="color:var(--accent-rose);">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                </button>
-              </div>
             </div>
           </div>
         </div>
@@ -118,6 +118,7 @@ export function openModuleDetailModal(moduleId) {
     : String(module.topics || '').split('\n').filter(Boolean);
 
   const topicDetails = Array.isArray(module.topicDetails) ? module.topicDetails : [];
+  const modulePdf = module.pdfFile || localModulePdfs[module.id];
 
   modalOverlay.innerHTML = `
     <div class="modal-dialog modal-lg">
@@ -156,6 +157,20 @@ export function openModuleDetailModal(moduleId) {
           <h4 style="font-size:1rem; font-weight:700; color:var(--text-main); margin-bottom:0.5rem;">Description</h4>
           <p style="font-size:0.925rem; color:var(--text-muted); line-height:1.6;">${module.description}</p>
         </div>
+
+        ${modulePdf ? `
+          <section class="module-pdf-section" aria-labelledby="module-pdf-title">
+            <div class="module-pdf-header">
+              <div>
+                <h4 id="module-pdf-title">Module ${module.moduleNumber} Full Notes</h4>
+                <p>Open the course PDF in the full-size reader.</p>
+              </div>
+              <button class="btn btn-primary btn-sm" id="btn-open-module-pdf" type="button">
+                OPEN PDF ↗
+              </button>
+            </div>
+          </section>
+        ` : ''}
 
         <!-- Learning Objectives -->
         <div style="margin-bottom:1.5rem;">
@@ -216,10 +231,16 @@ export function openModuleDetailModal(moduleId) {
         <div>
           <h4 style="font-size:1rem; font-weight:700; color:var(--text-main); margin-bottom:0.6rem;">Academic Resources & Reference Links</h4>
           <div style="display:flex; flex-direction:column; gap:0.6rem; font-size:0.875rem;">
-            ${module.pdfLink ? `
+            ${module.pdfLink && !modulePdf ? `
               <div style="display:flex; align-items:center; gap:0.5rem;">
                 <span style="font-weight:600; color:var(--text-main);">Lecture Notes / PDF:</span>
                 <a href="${module.pdfLink}" target="_blank" rel="noopener noreferrer" style="color:var(--primary); text-decoration:underline;">View Notes / Reference Manual ↗</a>
+              </div>
+            ` : ''}
+            ${module.pdfLink && modulePdf ? `
+              <div style="display:flex; align-items:center; gap:0.5rem;">
+                <span style="font-weight:600; color:var(--text-main);">Additional Reference:</span>
+                <a href="${module.pdfLink}" target="_blank" rel="noopener noreferrer" style="color:var(--primary); text-decoration:underline;">Open online reference ↗</a>
               </div>
             ` : ''}
             ${module.videoLink ? `
@@ -250,6 +271,13 @@ export function openModuleDetailModal(moduleId) {
   document.getElementById('btn-close-mod-detail').onclick = close;
   document.getElementById('btn-close-mod-detail-2').onclick = close;
   modalOverlay.onclick = (e) => { if (e.target === modalOverlay) close(); };
+  const openPdfButton = document.getElementById('btn-open-module-pdf');
+  if (openPdfButton && modulePdf) {
+    openPdfButton.onclick = () => openModulePdfViewer(
+      modulePdf,
+      `Module ${module.moduleNumber}: ${module.title}`
+    );
+  }
 
   // Handle Progress Change
   const progressSelect = document.getElementById('select-module-progress');
@@ -274,4 +302,140 @@ export function openModuleDetailModal(moduleId) {
       window.dispatchEvent(new CustomEvent('module-updated'));
     };
   }
+}
+
+function openModulePdfViewer(pdfUrl, title) {
+  let resolvedUrl;
+  try {
+    resolvedUrl = new URL(pdfUrl, document.baseURI);
+    if (!['http:', 'https:', 'file:'].includes(resolvedUrl.protocol)) {
+      throw new Error('Unsupported PDF URL protocol.');
+    }
+  } catch {
+    showPdfViewerError(`The PDF URL for "${title}" is invalid.`);
+    return;
+  }
+
+  let overlay = document.getElementById('module-pdf-viewer-overlay');
+  if (!overlay) {
+    overlay = document.createElement('div');
+    overlay.id = 'module-pdf-viewer-overlay';
+    overlay.className = 'pdf-viewer-overlay';
+    document.body.appendChild(overlay);
+  }
+
+  overlay.classList.remove('is-minimized', 'is-maximized');
+  overlay.innerHTML = `
+    <section class="pdf-viewer-dialog" role="dialog" aria-modal="true" aria-labelledby="pdf-viewer-title">
+      <header class="pdf-viewer-toolbar">
+        <h2 class="pdf-viewer-title" id="pdf-viewer-title"></h2>
+        <div class="pdf-viewer-actions">
+          <a class="btn btn-secondary btn-sm pdf-viewer-open-tab" target="_blank" rel="noopener noreferrer">OPEN IN NEW TAB ↗</a>
+          <button class="pdf-viewer-window-btn" type="button" data-pdf-action="minimize" aria-label="Minimize PDF viewer" title="Minimize">—</button>
+          <button class="pdf-viewer-window-btn" type="button" data-pdf-action="maximize" aria-label="Maximize PDF viewer" title="Maximize">□</button>
+          <button class="pdf-viewer-window-btn pdf-viewer-close" type="button" data-pdf-action="close" aria-label="Close PDF viewer" title="Close">×</button>
+        </div>
+      </header>
+      <div class="pdf-viewer-content">
+        <p class="pdf-viewer-error" role="alert" hidden></p>
+        <iframe class="pdf-viewer-frame" title=""></iframe>
+      </div>
+    </section>
+    <button class="pdf-viewer-minimized" type="button" data-pdf-action="restore" aria-label="Restore PDF viewer">
+      <span aria-hidden="true">▤</span>
+      <span class="pdf-viewer-minimized-title"></span>
+      <span class="pdf-viewer-restore-icon" aria-hidden="true">□</span>
+    </button>
+  `;
+
+  const frame = overlay.querySelector('.pdf-viewer-frame');
+  const errorMessage = overlay.querySelector('.pdf-viewer-error');
+  overlay.querySelector('#pdf-viewer-title').textContent = title;
+  overlay.querySelector('.pdf-viewer-minimized-title').textContent = title;
+  overlay.querySelector('.pdf-viewer-open-tab').href = resolvedUrl.href;
+  frame.title = title;
+  frame.src = `${resolvedUrl.href}#toolbar=1`;
+
+  const closeViewer = () => overlay.remove();
+  overlay.querySelectorAll('[data-pdf-action]').forEach(button => {
+    button.addEventListener('click', () => {
+      switch (button.dataset.pdfAction) {
+        case 'minimize':
+          overlay.classList.add('is-minimized');
+          break;
+        case 'maximize':
+          button.textContent = overlay.classList.toggle('is-maximized') ? '❐' : '□';
+          button.title = overlay.classList.contains('is-maximized') ? 'Restore' : 'Maximize';
+          button.setAttribute(
+            'aria-label',
+            overlay.classList.contains('is-maximized') ? 'Restore PDF viewer' : 'Maximize PDF viewer'
+          );
+          break;
+        case 'restore':
+          overlay.classList.remove('is-minimized');
+          break;
+        case 'close':
+          closeViewer();
+          break;
+      }
+    });
+  });
+  overlay.addEventListener('keydown', event => {
+    if (event.key === 'Escape') closeViewer();
+  });
+  frame.addEventListener('error', () => {
+    errorMessage.hidden = false;
+    errorMessage.textContent = 'The PDF could not be loaded. Check that the file exists or open it in a new tab.';
+  });
+
+  if (window.location.protocol !== 'file:' && resolvedUrl.origin === window.location.origin) {
+    fetch(resolvedUrl.href, { method: 'HEAD' })
+      .then(response => {
+        if (!frame.isConnected) return;
+        if (!response.ok && response.status !== 405) {
+          errorMessage.hidden = false;
+          errorMessage.textContent = 'This module PDF is missing or unavailable. Please check the associated PDF file.';
+          frame.hidden = true;
+        }
+      })
+      .catch(() => {
+        if (!frame.isConnected) return;
+        errorMessage.hidden = false;
+        errorMessage.textContent = 'This module PDF could not be reached. Please check that the associated file is available.';
+        frame.hidden = true;
+      });
+  }
+
+  overlay.classList.add('active');
+  overlay.querySelector('[data-pdf-action="minimize"]').focus();
+}
+
+function showPdfViewerError(message) {
+  document.getElementById('module-pdf-viewer-overlay')?.remove();
+  const overlay = document.createElement('div');
+  overlay.id = 'module-pdf-viewer-overlay';
+  overlay.className = 'pdf-viewer-overlay active';
+
+  const dialog = document.createElement('section');
+  dialog.className = 'pdf-viewer-dialog pdf-viewer-error-dialog';
+  dialog.setAttribute('role', 'alertdialog');
+  dialog.setAttribute('aria-modal', 'true');
+  const toolbar = document.createElement('header');
+  toolbar.className = 'pdf-viewer-toolbar';
+  const title = document.createElement('h2');
+  title.className = 'pdf-viewer-title';
+  title.textContent = 'PDF unavailable';
+  const close = document.createElement('button');
+  close.className = 'pdf-viewer-window-btn pdf-viewer-close';
+  close.type = 'button';
+  close.setAttribute('aria-label', 'Close PDF viewer');
+  close.textContent = '×';
+  close.onclick = () => overlay.remove();
+  const error = document.createElement('p');
+  error.className = 'pdf-viewer-error';
+  error.textContent = message;
+  toolbar.append(title, close);
+  dialog.append(toolbar, error);
+  overlay.append(dialog);
+  document.body.append(overlay);
 }

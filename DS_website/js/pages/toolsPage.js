@@ -40,7 +40,7 @@ export function renderToolsPage() {
           `).join('')}
         </div>
 
-        <div style="display:flex; gap:0.6rem; margin-top:auto; pt-2;">
+        <div style="display:flex; gap:0.6rem; margin-top:auto; padding-top:0.5rem;">
           <a href="${tool.link}" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm" style="flex:1;">
             OPEN TOOL ↗
           </a>

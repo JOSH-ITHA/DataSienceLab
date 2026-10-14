@@ -1,15 +1,15 @@
-﻿/**
+/**
  * DATA SCIENCE SUBJECT DIGITAL LIBRARY - INITIAL SEED DATA
  * Contains student profile, 5 syllabus modules, 10 runnable lab experiments, and 8 tools.
  */
 
 export const studentData = {
-  name: "Joshitha",
+  name: "Joshitha Upati",
   rollNo: "24102A030127",
   department: "Data Science",
   section: "2",
   subject: "Data Science",
-  faculty: "Bosu Babu",
+  faculty: "S. Bosubabu",
   designation: "Assistant Professor",
   institution: "College of Engineering & Technology",
   academicYear: "2024 - 2028",
@@ -17,40 +17,70 @@ export const studentData = {
   linkedin: "https://www.linkedin.com/in/joshitha-upati-65025a349/?isSelfProfile=true",
   github: "https://github.com/JOSH-ITHA",
   email: "upati.joshitha@student.edu",
-  aboutMe: "Undergraduate student in Data Science with a strong passion for data analytics, statistical computing, machine learning, and interactive data visualization. Experienced in Python data pipelines, NumPy mathematical computing, Pandas data wrangling, and exploratory data modeling.",
+  aboutMe: "Third-year Bachelor of Technology student in Data Science with a strong foundation in programming, problem-solving, and software development. Builds practical applications across data science, web development, and cloud computing, including a plant disease detection project and a weather application. Brings clear communication, a collaborative approach, and enthusiasm for learning and applying new technologies.",
   skills: [
-    "Python Programming",
-    "NumPy & Pandas",
-    "Data Wrangling & Cleaning",
-    "Matplotlib & Seaborn",
-    "Exploratory Data Analysis (EDA)",
-    "Scikit-Learn Machine Learning",
-    "Statistical & Inferential Analysis",
-    "Jupyter Notebook & Google Colab",
-    "Git & Version Control",
-    "SQL Database Querying"
+    "Python",
+    "Java",
+    "C",
+    "C++",
+    "Data Structures & Algorithms",
+    "JavaScript",
+    "Node.js",
+    "Express.js",
+    "HTML5",
+    "CSS3",
+    "AWS Cloud",
+    "Data Science"
   ],
   resume: {
-    title: "Joshitha - Data Science Student Resume",
-    summary: "Dedicated Data Science undergraduate with practical experience in statistical modeling, exploratory data analysis, and predictive machine learning algorithms. Seeking to leverage analytical and programming skills in data-driven problem solving.",
+    title: "Joshitha Upati — Software & Data Science Resume",
+    fullName: "Joshitha Upati",
+    headline: "B.Tech Data Science Student | Software Development | Cloud Computing",
+    summary: "Third-year B.Tech student in Data Science with hands-on project experience and a broad programming foundation spanning Python, Java, C, C++, and JavaScript. Builds web applications with Node.js and Express.js and applies problem-solving skills to practical projects, including plant disease detection and a weather application. Holds an AWS-issued cloud certification and digital badge, and brings strong communication skills and a collaborative, growth-oriented approach.",
     education: [
       {
         degree: "Bachelor of Technology in Data Science",
         institution: "Department of Data Science",
-        period: "2024 - Present",
-        details: "Core Coursework: Data Science Foundations, Python for Data Analysis, Linear Algebra & Calculus, Probability & Statistics, Data Structures."
+        period: "2024 - 2028 · Third year",
+        details: "Coursework includes data science foundations, programming, data structures, statistics, and analytical problem solving."
+      }
+    ],
+    skillGroups: [
+      {
+        category: "Programming Languages",
+        skills: ["Python", "Java", "C", "C++", "JavaScript"]
+      },
+      {
+        category: "Computer Science",
+        skills: ["Data Structures & Algorithms", "Problem Solving"]
+      },
+      {
+        category: "Web Development",
+        skills: ["HTML5", "CSS3", "Node.js", "Express.js"]
+      },
+      {
+        category: "Cloud & Data",
+        skills: ["AWS Cloud", "Data Science"]
+      }
+    ],
+    certifications: [
+      {
+        name: "AWS Cloud Certification & Official Digital Badge",
+        issuer: "Amazon Web Services",
+        details: "AWS-issued certification and digital badge in cloud computing."
       }
     ],
     projects: [
       {
-        title: "Data Science Subject Digital Library & Virtual Lab",
-        description: "An interactive educational digital platform featuring module repositories, live browser-based Python lab execution, and automated progress analytics."
+        title: "Plant Disease Detection",
+        description: "Developed an agricultural project focused on detecting plant diseases to help identify potential crop-health issues. Project details, implementation tools, and repository link can be added to highlight the exact technical contribution."
       },
       {
-        title: "Exploratory Student Performance Predictive Analysis",
-        description: "Applied statistical cleaning and regression modeling on academic datasets using Pandas and Scikit-Learn to forecast exam outcomes."
+        title: "Weather Application",
+        description: "Built an application that presents weather information to users. The project can be expanded with its technology stack, data source, and repository or live-demo link."
       }
-    ]
+    ],
+    softSkills: ["Strong communication", "Team collaboration", "Problem solving", "Adaptability", "Continuous learning"]
   }
 };
 
@@ -462,7 +492,7 @@ def compute_data_metrics(raw_scores):
         else:
             grades["Pass (40-59)"] += 1
             
-    print("\n--- SUMMARY REPORT ---")
+    print("\\n--- SUMMARY REPORT ---")
     print(f"Total Count : {total_records}")
     print(f"Mean Score  : {mean_val:.2f}")
     print(f"Median Score: {median_val:.2f}")
@@ -514,29 +544,29 @@ B = np.array([[9, 8, 7],
               [6, 5, 4],
               [3, 2, 1]])
 
-print("Matrix A (3x3):\n", A)
-print("\nMatrix B (3x3):\n", B)
+print("Matrix A (3x3):\\n", A)
+print("\\nMatrix B (3x3):\\n", B)
 
 # 2. Matrix Arithmetic & Dot Product
-print("\n--- Element-wise Addition (A + B) ---")
+print("\\n--- Element-wise Addition (A + B) ---")
 print(A + B)
 
-print("\n--- Matrix Multiplication (A @ B) ---")
+print("\\n--- Matrix Multiplication (A @ B) ---")
 dot_result = np.dot(A, B)
 print(dot_result)
 
 # 3. Transpose & Determinant
-print("\nTranspose of Matrix A:\n", A.T)
+print("\\nTranspose of Matrix A:\\n", A.T)
 
 # 4. Statistical Reductions along Axes
-print("\n--- Statistical Reductions ---")
+print("\\n--- Statistical Reductions ---")
 print(f"Matrix A Sum (All elements)  : {np.sum(A)}")
 print(f"Column-wise Mean (axis=0)    : {np.mean(A, axis=0)}")
 print(f"Row-wise Maxima (axis=1)     : {np.max(A, axis=1)}")
 print(f"Standard Deviation           : {np.std(A):.4f}")
 
 # 5. Boolean Masking
-print("\nElements in A greater than 5 :", A[A > 5])`,
+print("\\nElements in A greater than 5 :", A[A > 5])`,
     expectedOutput: `=== NUMPY ARRAY & MATRIX COMPUTATION ===
 Matrix A (3x3):
  [[1 2 3]
@@ -611,12 +641,12 @@ df['Total_Score'] = df['Math_Score'] + df['Stats_Score'] + df['Python_Score']
 df['Avg_Score'] = (df['Total_Score'] / 3).round(2)
 df['Performance'] = np.where(df['Avg_Score'] >= 85, 'Outstanding', 'Good')
 
-print("\n=== DATAFRAME WITH COMPUTED METRICS ===")
+print("\\n=== DATAFRAME WITH COMPUTED METRICS ===")
 print(df[['Name', 'Total_Score', 'Avg_Score', 'Performance']])
 
 # 4. Filter High Performers (Avg >= 85 and Attendance >= 90)
 high_performers = df[(df['Avg_Score'] >= 85) & (df['Attendance_%'] >= 90)]
-print("\n=== TOP MERIT CANDIDATES ===")
+print("\\n=== TOP MERIT CANDIDATES ===")
 print(high_performers[['StudentID', 'Name', 'Avg_Score', 'Attendance_%']])`,
     expectedOutput: `=== ORIGINAL STUDENT DATAFRAME ===
   StudentID    Name  Math_Score  Stats_Score  Python_Score  Attendance_%
@@ -675,7 +705,7 @@ print("=== EMPLOYEE DATASET ===")
 print(df)
 
 # 2. Descriptive Summary
-print("\n--- DESCRIPTIVE STATISTICS ---")
+print("\\n--- DESCRIPTIVE STATISTICS ---")
 print(df[['Salary_K$', 'Experience_Yrs', 'Projects_Completed']].describe().round(2))
 
 # 3. GroupBy Aggregation by Department
@@ -685,11 +715,11 @@ dept_summary = df.groupby('Department').agg({
     'Employee': 'count'
 }).rename(columns={'count': 'Headcount'})
 
-print("\n--- DEPARTMENT LEVEL AGGREGATIONS ---")
+print("\\n--- DEPARTMENT LEVEL AGGREGATIONS ---")
 print(dept_summary.round(2))
 
 # 4. Correlation Analysis
-print("\n--- CORRELATION MATRIX ---")
+print("\\n--- CORRELATION MATRIX ---")
 corr = df[['Experience_Yrs', 'Salary_K$', 'Projects_Completed']].corr()
 print(corr.round(3))`,
     expectedOutput: `=== EMPLOYEE DATASET ===
@@ -754,12 +784,12 @@ months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']
 model_accuracy = [78.2, 81.5, 84.0, 89.2, 91.8, 94.5]
 loss_values = [0.65, 0.52, 0.41, 0.28, 0.19, 0.12]
 
-print("\n1. TRAINING EPOCHS ACCURACY TREND (Line Plot Representation):")
+print("\\n1. TRAINING EPOCHS ACCURACY TREND (Line Plot Representation):")
 for m, acc, loss in zip(months, model_accuracy, loss_values):
     bar_acc = "█" * int(acc / 5)
     print(f"{m:4} | Acc: {acc:5.1f}% [{bar_acc:<20}] Loss: {loss:.2f}")
 
-print("\n2. CATEGORY COMPARISON (Bar Chart Representation):")
+print("\\n2. CATEGORY COMPARISON (Bar Chart Representation):")
 categories = ['Python', 'SQL', 'Tableau', 'PowerBI', 'TensorFlow']
 demand_index = [95, 88, 72, 68, 84]
 
@@ -767,7 +797,7 @@ for cat, val in zip(categories, demand_index):
     bars = "■" * int(val / 4)
     print(f"{cat:12} | {val:3d} pts {bars}")
 
-print("\n3. BIVARIATE CORRELATION STATS:")
+print("\\n3. BIVARIATE CORRELATION STATS:")
 x = np.array([10, 20, 30, 40, 50, 60, 70])
 y = np.array([25, 45, 62, 81, 98, 115, 140])
 slope, intercept = np.polyfit(x, y, 1)
@@ -828,7 +858,7 @@ print("=== INITIAL UNCLEANED DATASET ===")
 print(df)
 
 # 2. Missing Value Analysis
-print("\n--- MISSING VALUE COUNTS ---")
+print("\\n--- MISSING VALUE COUNTS ---")
 print(df.isnull().sum())
 
 # 3. Imputation (Median for numbers, Mode for categorical)
@@ -836,7 +866,7 @@ df['Age'] = df['Age'].fillna(df['Age'].median())
 df['Income_K'] = df['Income_K'].fillna(df['Income_K'].median())
 df['City'] = df['City'].fillna(df['City'].mode()[0])
 
-print("\n=== DATASET AFTER IMPUTATION ===")
+print("\\n=== DATASET AFTER IMPUTATION ===")
 print(df)
 
 # 4. Outlier Detection using IQR Method on Income_K
@@ -846,16 +876,16 @@ IQR = Q3 - Q1
 lower_bound = Q1 - 1.5 * IQR
 upper_bound = Q3 + 1.5 * IQR
 
-print(f"\n--- IQR OUTLIER DETECTION (Income_K) ---")
+print(f"\\n--- IQR OUTLIER DETECTION (Income_K) ---")
 print(f"Q1 (25th): {Q1:.2f} | Q3 (75th): {Q3:.2f} | IQR: {IQR:.2f}")
 print(f"Valid Range: [{lower_bound:.2f}, {upper_bound:.2f}]")
 
 outliers = df[(df['Income_K'] < lower_bound) | (df['Income_K'] > upper_bound)]
-print(f"Detected Outliers:\n", outliers[['Age', 'Income_K', 'City']])
+print(f"Detected Outliers:\\n", outliers[['Age', 'Income_K', 'City']])
 
 # 5. Cleaned Dataset without Outliers
 clean_df = df[(df['Income_K'] >= lower_bound) & (df['Income_K'] <= upper_bound) & (df['Age'] <= 80)]
-print("\n=== FINAL CLEANED & NORMALIZED DATASET ===")
+print("\\n=== FINAL CLEANED & NORMALIZED DATASET ===")
 print(clean_df.reset_index(drop=True))`,
     expectedOutput: `=== INITIAL UNCLEANED DATASET ===
      Age  Income_K       City
@@ -941,22 +971,22 @@ df = pd.DataFrame(records)
 print("=== STUDENT PERFORMANCE DATASET SAMPLE (Top 5) ===")
 print(df.head())
 
-print("\n--- DATASET SHAPE & METADATA ---")
+print("\\n--- DATASET SHAPE & METADATA ---")
 print(f"Total Observations: {df.shape[0]}, Attributes: {df.shape[1]}")
 
-print("\n--- STATISTICAL 5-NUMBER SUMMARY ---")
+print("\\n--- STATISTICAL 5-NUMBER SUMMARY ---")
 desc = df.describe().T[['mean', 'std', 'min', '50%', 'max']]
 desc.columns = ['Mean', 'Std Dev', 'Min', 'Median (Q2)', 'Max']
 print(desc.round(2))
 
-print("\n--- CORRELATION MATRIX WITH TARGET 'Score' ---")
+print("\\n--- CORRELATION MATRIX WITH TARGET 'Score' ---")
 corr = df.corr()
 print(corr['Score'].sort_values(ascending=False).round(4))
 
-print("\n--- HIGH PERFORMANCE FILTER (Score >= 80) ---")
+print("\\n--- HIGH PERFORMANCE FILTER (Score >= 80) ---")
 top_students = df[df['Score'] >= 80]
 print(top_students)
-print(f"\nAverage Study Hours for Top Scorers: {top_students['Hours_Studied'].mean():.2f} hrs/day")`,
+print(f"\\nAverage Study Hours for Top Scorers: {top_students['Hours_Studied'].mean():.2f} hrs/day")`,
     expectedOutput: `=== STUDENT PERFORMANCE DATASET SAMPLE (Top 5) ===
    Hours_Studied  Attendance_Pct  Sleep_Hours  Score
 0            2.5              75          7.0     21
@@ -1027,7 +1057,7 @@ df_minmax = df.copy()
 for col in df.columns:
     df_minmax[col] = (df[col] - df[col].min()) / (df[col].max() - df[col].min())
 
-print("\n=== MIN-MAX NORMALIZED DATA [0.0 to 1.0] ===")
+print("\\n=== MIN-MAX NORMALIZED DATA [0.0 to 1.0] ===")
 print(df_minmax.round(4))
 
 # 3. Standard Scaler / Z-score Standardization (Mean=0, Std=1)
@@ -1035,11 +1065,11 @@ df_standard = df.copy()
 for col in df.columns:
     df_standard[col] = (df[col] - df[col].mean()) / df[col].std()
 
-print("\n=== STANDARD SCALED (Z-SCORE) DATA ===")
+print("\\n=== STANDARD SCALED (Z-SCORE) DATA ===")
 print(df_standard.round(4))
 
 # 4. Verify properties of Standardized Data
-print("\n--- Z-SCORE PROPERTIES VERIFICATION ---")
+print("\\n--- Z-SCORE PROPERTIES VERIFICATION ---")
 print("Means (should be ~0.0):")
 print(df_standard.mean().round(4).to_dict())
 print("Standard Deviations (should be 1.0):")
@@ -1131,7 +1161,7 @@ ss_total = np.sum((Y - y_mean) ** 2)
 ss_res = np.sum((Y - Y_pred) ** 2)
 r2_score = 1 - (ss_res / ss_total)
 
-print("\n--- MODEL PERFORMANCE EVALUATION ---")
+print("\\n--- MODEL PERFORMANCE EVALUATION ---")
 print(f"Mean Absolute Error (MAE) : USD {mae * 1000:.2f}")
 print(f"Mean Squared Error (MSE)  : {mse:.4f}")
 print(f"Root Mean Squared Error   : USD {rmse * 1000:.2f}")
@@ -1140,7 +1170,7 @@ print(f"R-squared Score (R²)      : {r2_score:.4f} ({r2_score*100:.2f}% varianc
 # 5. Make Future Prediction
 test_exp = 7.5
 predicted_salary = slope * test_exp + intercept
-print(f"\nPrediction for {test_exp} Years Experience: USD {predicted_salary * 1000:,.2f}")`,
+print(f"\\nPrediction for {test_exp} Years Experience: USD {predicted_salary * 1000:,.2f}")`,
     expectedOutput: `=== SIMPLE LINEAR REGRESSION FROM FIRST PRINCIPLES ===
 Regression Equation: Salary = (8.93 * Experience) + 26.79
 
@@ -1217,14 +1247,14 @@ for idx, (true_lbl, pred_lbl) in enumerate(zip(y_test, predictions)):
 
 # Evaluation
 accuracy = np.mean(np.array(predictions) == y_test)
-print("\n--- MODEL ACCURACY & SUMMARY ---")
+print("\\n--- MODEL ACCURACY & SUMMARY ---")
 print(f"Test Set Accuracy: {accuracy * 100:.1f}%")
 print("Confusion Matrix:")
 tp = sum(1 for p, t in zip(predictions, y_test) if p == 1 and t == 1)
 tn = sum(1 for p, t in zip(predictions, y_test) if p == 0 and t == 0)
 fp = sum(1 for p, t in zip(predictions, y_test) if p == 1 and t == 0)
 fn = sum(1 for p, t in zip(predictions, y_test) if p == 0 and t == 1)
-print(f"[[TN={tn}, FP={fp}],\n [FN={fn}, TP={tp}]]")`,
+print(f"[[TN={tn}, FP={fp}],\\n [FN={fn}, TP={tp}]]")`,
     expectedOutput: `=== K-NEAREST NEIGHBORS (KNN) CLASSIFICATION ===
 KNN Hyperparameter K = 3
 Test Sample 1 | True Label: 0 -> Predicted: 0 [CORRECT]
@@ -1258,25 +1288,25 @@ Confusion Matrix:
     code: `import pandas as pd
 from io import StringIO
 
-csv_data = "student,marks,course\nAsha,88,Data Science\nRahul,91,Machine Learning\n"
+csv_data = "student,marks,course\\nAsha,88,Data Science\\nRahul,91,Machine Learning\\n"
 df = pd.read_csv(StringIO(csv_data))
 print("=== CSV DATA ===")
 print(df.to_string(index=False))
 
 with open("students.tsv", "w", encoding="utf-8") as file:
     df.to_csv(file, sep="\t", index=False)
-print("\n=== TSV DATA ===")
+print("\\n=== TSV DATA ===")
 print(pd.read_csv("students.tsv", sep="\t").to_string(index=False))
 
 json_data = [{"student": "Neha", "marks": 94, "course": "Statistics"}]
 json_df = pd.DataFrame(json_data)
 json_df.to_json("student.json", orient="records", indent=2)
-print("\n=== JSON DATA ===")
+print("\\n=== JSON DATA ===")
 print(pd.read_json("student.json").to_string(index=False))
 
 excel_path = "students.xlsx"
 df.to_excel(excel_path, index=False)
-print("\n=== EXCEL DATA ===")
+print("\\n=== EXCEL DATA ===")
 print(pd.read_excel(excel_path).to_string(index=False))`,
     expectedOutput: `=== CSV DATA ===
 student marks course
@@ -1323,14 +1353,14 @@ url = "https://raw.githubusercontent.com/mwaskom/seaborn-data/master/tips.csv"
 try:
     df = pd.read_csv(url)
 except Exception:
-    csv_data = "total_bill,tip,sex,day,size\n16.99,1.01,Female,Sun,2\n10.34,1.66,Male,Sun,3\n21.01,3.5,Male,Sat,3\n"
+    csv_data = "total_bill,tip,sex,day,size\\n16.99,1.01,Female,Sun,2\\n10.34,1.66,Male,Sun,3\\n21.01,3.5,Male,Sat,3\\n"
     df = pd.read_csv(StringIO(csv_data))
 
 print("=== ORIGINAL CSV DATA ===")
 print(df.head(3).to_string(index=False))
 
 sep_df = pd.read_csv(StringIO(df.to_csv(sep='\t', index=False)))
-print("\n=== TAB-SEPARATED DATA ===")
+print("\\n=== TAB-SEPARATED DATA ===")
 print(sep_df.head(2).to_string(index=False))
 
 filtered = df[df["total_bill"] > 15].copy()
@@ -1338,7 +1368,7 @@ filtered["bill_plus_tip"] = filtered["total_bill"] + filtered["tip"]
 filtered.to_csv("filtered_tips.csv", index=False)
 filtered.to_csv("filtered_tips.tsv", sep='\t', index=False)
 
-print("\n=== WRITTEN FILES ===")
+print("\\n=== WRITTEN FILES ===")
 print("filtered_tips.csv and filtered_tips.tsv created successfully")
 print(f"Rows written: {len(filtered)}")
 print(f"Columns: {list(filtered.columns)}")`,
@@ -1390,13 +1420,13 @@ print("=== JSON DATAFRAME ===")
 print(raw_df.to_string(index=False))
 
 nested_df = pd.json_normalize(records)
-print("\n=== NORMALIZED ADDRESS DATA ===")
+print("\\n=== NORMALIZED ADDRESS DATA ===")
 print(nested_df[["employee_id", "name", "address.city", "address.state"]].to_string(index=False))
 
 nested_df["department"] = nested_df["department"].str.upper()
 ordered = nested_df[["employee_id", "name", "department", "address.city", "address.state"]]
 ordered.to_json("employees_processed.json", orient="records", indent=2)
-print("\n=== SAVED JSON FILE ===")
+print("\\n=== SAVED JSON FILE ===")
 print(pd.read_json("employees_processed.json").to_string(index=False))`,
     expectedOutput: `=== JSON DATAFRAME ===
 employee_id name department address.city address.state
@@ -1446,7 +1476,7 @@ loaded_df.to_excel("employees_with_bonus.xlsx", index=False)
 
 print("=== ORIGINAL EXCEL DATA ===")
 print(loaded_df[["Employee", "Experience", "Salary"]].to_string(index=False))
-print("\n=== SAVED EXCEL DATA ===")
+print("\\n=== SAVED EXCEL DATA ===")
 print(pd.read_excel("employees_with_bonus.xlsx").to_string(index=False))`,
     expectedOutput: `=== ORIGINAL EXCEL DATA ===
 Employee Experience Salary
@@ -1505,7 +1535,7 @@ for issue in issues:
 df = pd.DataFrame(issue_rows, columns=selected_fields)
 print("=== LAST 30 NON-PULL-REQUEST ISSUES ===")
 print(df.head(5).to_string(index=False))
-print(f"\nTotal displayed issues: {len(df)}")
+print(f"\\nTotal displayed issues: {len(df)}")
 df.to_csv("pandas_issues.csv", index=False)`,
     expectedOutput: `=== LAST 30 NON-PULL-REQUEST ISSUES ===
 number title state created_at comments user
@@ -1556,7 +1586,7 @@ connection.commit()
 cursor.execute("DELETE FROM students WHERE student_id = 2")
 connection.commit()
 
-print("\n=== FINAL TABLE DATA ===")
+print("\\n=== FINAL TABLE DATA ===")
 print(pd.read_sql_query("SELECT * FROM students ORDER BY student_id", connection).to_string(index=False))
 
 connection.close()`,
@@ -1600,22 +1630,22 @@ raw = pd.DataFrame({
 
 print("=== ORIGINAL DATA ===")
 print(raw)
-print("\nMissing values:\n", raw.isna().sum())
+print("\\nMissing values:\\n", raw.isna().sum())
 
 cleaned = raw.dropna().copy()
-print("\nAfter dropna:\n", cleaned)
+print("\\nAfter dropna:\\n", cleaned)
 
 filled = raw.fillna({"course": "Unknown", "marks": raw["marks"].mean()})
-print("\nAfter fillna:\n", filled)
+print("\\nAfter fillna:\\n", filled)
 
 unique = filled.drop_duplicates()
-print("\nAfter drop_duplicates:\n", unique)
+print("\\nAfter drop_duplicates:\\n", unique)
 
 transformed = unique.copy()
 transformed["course"] = transformed["course"].map({"DS": "Data Science", "ML": "Machine Learning", "AI": "Artificial Intelligence", "Unknown": "Not Available"})
 transformed = transformed.replace({"course": {"Data Science": "Data Science"}})
 renamed = transformed.rename(columns={"marks": "score"})
-print("\nTransformed and renamed copy:\n", renamed.to_string(index=False))`,
+print("\\nTransformed and renamed copy:\\n", renamed.to_string(index=False))`,
     expectedOutput: `=== ORIGINAL DATA ===
   student course marks
 0 Asha DS 88.0
@@ -1701,7 +1731,7 @@ plt.title("Measurement Distribution")
 plt.ylabel("Value")
 plt.tight_layout()
 plt.savefig("outlier_boxplot.png")
-print("\nBox plot saved as outlier_boxplot.png")`,
+print("\\nBox plot saved as outlier_boxplot.png")`,
     expectedOutput: `=== NORMAL DISTRIBUTION STATISTICS ===
 Mean: 50.34
 Standard deviation: 9.83
@@ -1732,16 +1762,16 @@ Box plot saved as outlier_boxplot.png`,
     language: "Python",
     code: `import re
 
-text = "Data\tScience  Analysis\nPython   and  Pandas\n2026 2027" 
+text = "Data\tScience  Analysis\\nPython   and  Pandas\\n2026 2027"
 words = re.split(r"\s+", text.strip())
 numbers = re.findall(r"\d+", text)
 letters = re.findall(r"[A-Za-z]+", text)
 
 print("=== SPLIT TEXT ===")
 print(words)
-print("\n=== MATCHED NUMBERS ===")
+print("\\n=== MATCHED NUMBERS ===")
 print(numbers)
-print("\n=== MATCHED WORDS ===")
+print("\\n=== MATCHED WORDS ===")
 print(letters)`,
     expectedOutput: `=== SPLIT TEXT ===
 ['Data', 'Science', 'Analysis', 'Python', 'and', 'Pandas', '2026', '2027']
@@ -1779,15 +1809,15 @@ series = pd.Series([88, 76, 91], index=index)
 
 print("=== MULTIINDEX SERIES ===")
 print(series)
-print("\nOuter level selection:")
+print("\\nOuter level selection:")
 print(series["Class A"])
-print("\nComplete selection:")
+print("\\nComplete selection:")
 print(series[("Class B", "Student 1")])
 
 frame = series.unstack()
-print("\nAfter unstack:")
+print("\\nAfter unstack:")
 print(frame)
-print("\nAfter stack:")
+print("\\nAfter stack:")
 print(frame.stack())`,
     expectedOutput: `=== MULTIINDEX SERIES ===
 Class  Student

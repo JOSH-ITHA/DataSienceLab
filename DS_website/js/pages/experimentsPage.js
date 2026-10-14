@@ -3,13 +3,22 @@
  * Lists Data Science lab experiments with instant search, filter tabs, and + ADD EXPERIMENT button.
  */
 
-import { Storage } from '../data/storage.js';
 import { renderExperimentCard } from '../components/experimentCard.js';
-import { openExperimentFormModal, openDeleteConfirmModal } from '../components/forms.js';
-import { Toast } from '../components/toast.js';
+import { Storage } from '../data/storage.js';
+import { openExperimentFormModal } from '../components/forms.js';
 
 let currentExpSearch = '';
 let currentExpFilter = 'all'; // 'all' | 'python' | 'completed' | 'not_completed'
+
+function setExperimentCardFace(card, showProcedure) {
+  const front = card.querySelector('.experiment-card-front');
+  const back = card.querySelector('.experiment-card-back');
+  card.classList.toggle('is-flipped', showProcedure);
+  front.toggleAttribute('inert', showProcedure);
+  front.setAttribute('aria-hidden', String(showProcedure));
+  back.toggleAttribute('inert', !showProcedure);
+  back.setAttribute('aria-hidden', String(!showProcedure));
+}
 
 export function renderExperimentsPage() {
   const experiments = Storage.getExperiments();
@@ -95,6 +104,23 @@ export function renderExperimentsPage() {
 }
 
 export function attachExperimentsPageListeners(onRerender) {
+  document.querySelectorAll('.experiment-flip-scene').forEach(scene => {
+    const card = scene.querySelector('.experiment-card');
+    if (!card) return;
+
+    setExperimentCardFace(card, false);
+    scene.addEventListener('click', event => {
+      if (event.target.closest('a, button, input, select, textarea')) return;
+      setExperimentCardFace(card, !card.classList.contains('is-flipped'));
+    });
+
+    scene.addEventListener('keydown', event => {
+      if (event.target !== scene || !['Enter', ' '].includes(event.key)) return;
+      event.preventDefault();
+      setExperimentCardFace(card, !card.classList.contains('is-flipped'));
+    });
+  });
+
   // Search Input
   const searchInput = document.getElementById('experiment-search-input');
   if (searchInput) {
@@ -130,29 +156,4 @@ export function attachExperimentsPageListeners(onRerender) {
     };
   }
 
-  // Edit Action
-  document.querySelectorAll('.btn-edit-exp').forEach(btn => {
-    btn.onclick = (e) => {
-      e.stopPropagation();
-      const id = btn.dataset.id;
-      const exp = Storage.getExperimentById(id);
-      if (exp) openExperimentFormModal(exp);
-    };
-  });
-
-  // Delete Action
-  document.querySelectorAll('.btn-delete-exp').forEach(btn => {
-    btn.onclick = (e) => {
-      e.stopPropagation();
-      const id = btn.dataset.id;
-      const exp = Storage.getExperimentById(id);
-      if (exp) {
-        openDeleteConfirmModal(`Experiment ${exp.experimentNumber}: ${exp.title}`, () => {
-          Storage.deleteExperiment(id);
-          Toast.success(`Experiment ${exp.experimentNumber} deleted.`);
-          onRerender();
-        });
-      }
-    };
-  });
 }

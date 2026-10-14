@@ -7,10 +7,14 @@
 import { studentData, initialModules, initialExperiments } from './initialData.js';
 
 const STORAGE_KEYS = {
-  STUDENT: 'ds_library_student_v3',      // bumped to v3 → forces re-seed with updated name
+  STUDENT: 'ds_library_student_v4',
+  LEGACY_STUDENT: 'ds_library_student_v3',
   MODULES: 'ds_library_modules_v2',      // bumped to v2 → forces re-seed with topicDetails
   EXPERIMENTS: 'ds_library_experiments_v1',
-  CODE_DRAFTS: 'ds_library_code_drafts_v1'
+  CODE_DRAFTS: 'ds_library_code_drafts_v1',
+  LANGUAGE_CODE_DRAFTS: 'ds_library_language_code_drafts_v1',
+  CODE_LANGUAGES: 'ds_library_code_languages_v1',
+  CODE_INPUTS: 'ds_library_code_inputs_v1'
 };
 
 export const Storage = {
@@ -18,7 +22,34 @@ export const Storage = {
   init() {
     if (typeof localStorage === 'undefined') return;
     if (!localStorage.getItem(STORAGE_KEYS.STUDENT)) {
-      localStorage.setItem(STORAGE_KEYS.STUDENT, JSON.stringify(studentData));
+      const legacyStudent = localStorage.getItem(STORAGE_KEYS.LEGACY_STUDENT);
+      if (legacyStudent) {
+        try {
+          const savedStudent = JSON.parse(legacyStudent);
+          localStorage.setItem(STORAGE_KEYS.STUDENT, JSON.stringify({
+            ...studentData,
+            ...savedStudent,
+            name: studentData.name,
+            aboutMe: studentData.aboutMe,
+            skills: studentData.skills,
+            resume: studentData.resume
+          }));
+        } catch (error) {
+          console.error("Error migrating saved student profile:", error);
+          localStorage.setItem(STORAGE_KEYS.STUDENT, JSON.stringify(studentData));
+        }
+      } else {
+        localStorage.setItem(STORAGE_KEYS.STUDENT, JSON.stringify(studentData));
+      }
+    }
+    try {
+      const savedStudent = JSON.parse(localStorage.getItem(STORAGE_KEYS.STUDENT));
+      if (savedStudent.faculty === 'Bosu Babu') {
+        savedStudent.faculty = studentData.faculty;
+        localStorage.setItem(STORAGE_KEYS.STUDENT, JSON.stringify(savedStudent));
+      }
+    } catch (error) {
+      console.error("Error updating saved faculty mentor:", error);
     }
     if (!localStorage.getItem(STORAGE_KEYS.MODULES)) {
       localStorage.setItem(STORAGE_KEYS.MODULES, JSON.stringify(initialModules));
@@ -28,6 +59,15 @@ export const Storage = {
     }
     if (!localStorage.getItem(STORAGE_KEYS.CODE_DRAFTS)) {
       localStorage.setItem(STORAGE_KEYS.CODE_DRAFTS, JSON.stringify({}));
+    }
+    if (!localStorage.getItem(STORAGE_KEYS.LANGUAGE_CODE_DRAFTS)) {
+      localStorage.setItem(STORAGE_KEYS.LANGUAGE_CODE_DRAFTS, JSON.stringify({}));
+    }
+    if (!localStorage.getItem(STORAGE_KEYS.CODE_LANGUAGES)) {
+      localStorage.setItem(STORAGE_KEYS.CODE_LANGUAGES, JSON.stringify({}));
+    }
+    if (!localStorage.getItem(STORAGE_KEYS.CODE_INPUTS)) {
+      localStorage.setItem(STORAGE_KEYS.CODE_INPUTS, JSON.stringify({}));
     }
   },
 
@@ -192,6 +232,82 @@ export const Storage = {
       localStorage.setItem(STORAGE_KEYS.CODE_DRAFTS, JSON.stringify(drafts));
     } catch (e) {
       console.error("Error resetting code:", e);
+    }
+  },
+
+  getLanguageCode(expId, language, fallbackDefaultCode = "") {
+    try {
+      const drafts = JSON.parse(localStorage.getItem(STORAGE_KEYS.LANGUAGE_CODE_DRAFTS) || '{}');
+      if (drafts[expId] && Object.prototype.hasOwnProperty.call(drafts[expId], language)) {
+        return drafts[expId][language];
+      }
+    } catch (error) {
+      console.error('Error reading language-specific code draft:', error);
+    }
+    return language === 'Python' ? this.getSavedCode(expId, fallbackDefaultCode) : fallbackDefaultCode;
+  },
+
+  saveLanguageCode(expId, language, code) {
+    try {
+      const drafts = JSON.parse(localStorage.getItem(STORAGE_KEYS.LANGUAGE_CODE_DRAFTS) || '{}');
+      drafts[expId] = { ...(drafts[expId] || {}), [language]: code };
+      localStorage.setItem(STORAGE_KEYS.LANGUAGE_CODE_DRAFTS, JSON.stringify(drafts));
+      if (language === 'Python') this.saveCode(expId, code);
+    } catch (error) {
+      console.error('Error saving language-specific code draft:', error);
+    }
+  },
+
+  resetLanguageCode(expId, language) {
+    try {
+      const drafts = JSON.parse(localStorage.getItem(STORAGE_KEYS.LANGUAGE_CODE_DRAFTS) || '{}');
+      if (drafts[expId]) {
+        delete drafts[expId][language];
+        if (Object.keys(drafts[expId]).length === 0) delete drafts[expId];
+        localStorage.setItem(STORAGE_KEYS.LANGUAGE_CODE_DRAFTS, JSON.stringify(drafts));
+      }
+    } catch (error) {
+      console.error('Error resetting language-specific code draft:', error);
+    }
+  },
+
+  getSelectedCodeLanguage(expId, fallbackLanguage = 'Python') {
+    try {
+      const selectedLanguages = JSON.parse(localStorage.getItem(STORAGE_KEYS.CODE_LANGUAGES) || '{}');
+      return selectedLanguages[expId] || fallbackLanguage;
+    } catch (error) {
+      console.error('Error reading selected code language:', error);
+      return fallbackLanguage;
+    }
+  },
+
+  saveSelectedCodeLanguage(expId, language) {
+    try {
+      const selectedLanguages = JSON.parse(localStorage.getItem(STORAGE_KEYS.CODE_LANGUAGES) || '{}');
+      selectedLanguages[expId] = language;
+      localStorage.setItem(STORAGE_KEYS.CODE_LANGUAGES, JSON.stringify(selectedLanguages));
+    } catch (error) {
+      console.error('Error saving selected code language:', error);
+    }
+  },
+
+  getLanguageInput(expId, language) {
+    try {
+      const inputs = JSON.parse(localStorage.getItem(STORAGE_KEYS.CODE_INPUTS) || '{}');
+      return inputs[expId]?.[language] || '';
+    } catch (error) {
+      console.error('Error reading language standard input:', error);
+      return '';
+    }
+  },
+
+  saveLanguageInput(expId, language, input) {
+    try {
+      const inputs = JSON.parse(localStorage.getItem(STORAGE_KEYS.CODE_INPUTS) || '{}');
+      inputs[expId] = { ...(inputs[expId] || {}), [language]: input };
+      localStorage.setItem(STORAGE_KEYS.CODE_INPUTS, JSON.stringify(inputs));
+    } catch (error) {
+      console.error('Error saving language standard input:', error);
     }
   },
 

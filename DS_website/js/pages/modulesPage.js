@@ -5,8 +5,7 @@
 
 import { Storage } from '../data/storage.js';
 import { renderModuleCard, openModuleDetailModal } from '../components/moduleCard.js';
-import { openModuleFormModal, openDeleteConfirmModal } from '../components/forms.js';
-import { Toast } from '../components/toast.js';
+import { openModuleFormModal } from '../components/forms.js';
 
 let currentSearchTerm = '';
 let currentFilter = 'all'; // 'all' | 'not_started' | 'in_progress' | 'completed'
@@ -148,25 +147,4 @@ export function attachModulesPageListeners(onRerender) {
     };
   });
 
-  document.querySelectorAll('.btn-edit-module').forEach(btn => {
-    btn.onclick = () => {
-      const id = btn.dataset.id;
-      const mod = Storage.getModuleById(id);
-      if (mod) openModuleFormModal(mod);
-    };
-  });
-
-  document.querySelectorAll('.btn-delete-module').forEach(btn => {
-    btn.onclick = () => {
-      const id = btn.dataset.id;
-      const mod = Storage.getModuleById(id);
-      if (mod) {
-        openDeleteConfirmModal(`Module ${mod.moduleNumber}: ${mod.title}`, () => {
-          Storage.deleteModule(id);
-          Toast.success(`Module ${mod.moduleNumber} deleted.`);
-          onRerender();
-        });
-      }
-    };
-  });
 }

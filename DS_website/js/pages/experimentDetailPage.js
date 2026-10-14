@@ -14,7 +14,7 @@
 
 import { Storage } from '../data/storage.js';
 import { renderCodeEditor, attachCodeEditorListeners } from '../components/codeEditor.js';
-import { openExperimentFormModal, openDeleteConfirmModal } from '../components/forms.js';
+import { openExperimentFormModal } from '../components/forms.js';
 import { Toast } from '../components/toast.js';
 
 export function renderExperimentDetailPage(experimentId) {
@@ -60,9 +60,6 @@ export function renderExperimentDetailPage(experimentId) {
               <button class="btn btn-secondary btn-sm" id="btn-edit-current-exp" title="Edit this experiment">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
                 Edit
-              </button>
-              <button class="btn btn-secondary btn-sm" id="btn-delete-current-exp" title="Delete this experiment" style="color:var(--accent-rose);">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path></svg>
               </button>
             </div>
           </div>
@@ -215,18 +212,6 @@ export function attachExperimentDetailPageListeners(experimentId, onNavigate) {
   if (editBtn) {
     editBtn.onclick = () => {
       openExperimentFormModal(exp);
-    };
-  }
-
-  // Delete Button
-  const deleteBtn = document.getElementById('btn-delete-current-exp');
-  if (deleteBtn) {
-    deleteBtn.onclick = () => {
-      openDeleteConfirmModal(`Experiment ${exp.experimentNumber}: ${exp.title}`, () => {
-        Storage.deleteExperiment(exp.id);
-        Toast.success(`Experiment ${exp.experimentNumber} deleted.`);
-        window.location.hash = '#experiments';
-      });
     };
   }
 }
