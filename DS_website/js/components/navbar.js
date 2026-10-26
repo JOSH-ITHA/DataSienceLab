@@ -4,6 +4,7 @@
  */
 
 import { Storage } from '../data/storage.js';
+import { THEMES, THEME_IDS, getSavedTheme, applyTheme } from '../data/themes.js';
 
 export function renderNavbar(activeRoute = 'home') {
   const student = Storage.getStudent();
@@ -16,8 +17,13 @@ export function renderNavbar(activeRoute = 'home') {
     { id: 'experiments', label: 'EXPERIMENTS', hash: '#experiments', icon: '<path d="M9 3h6M10 3v6.5l-5.5 9A2 2 0 0 0 6.2 21h11.6a2 2 0 0 0 1.7-2.5l-5.5-9V3"></path><path d="M8 15h8"></path>' },
     { id: 'tools', label: 'TOOLS', hash: '#tools', icon: '<path d="M14.7 6.3a5 5 0 0 0-6.4 6.4L3 18a2.1 2.1 0 0 0 3 3l5.3-5.3a5 5 0 0 0 6.4-6.4L14 13l-3-3z"></path>' },
     { id: 'resources', label: 'RESOURCES', hash: '#resources', icon: '<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>' },
-    { id: 'projects', label: 'PROJECTS', hash: '#projects', icon: '<rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M7 8h10M7 12h6M7 16h4"></path>' }
+    { id: 'projects', label: 'PROJECTS', hash: '#projects', icon: '<rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M7 8h10M7 12h6M7 16h4"></path>' },
+    { id: 'themes', label: 'THEMES', hash: '#themes', icon: '<circle cx="12" cy="12" r="3"></circle><path d="M12 2a10 10 0 0 0 0 20"></path><path d="M12 2a10 10 0 0 1 0 20"></path><line x1="2" y1="12" x2="22" y2="12"></line>' },
+    { id: 'campus', label: 'MY CAMPUS', hash: '#campus', icon: '<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline>' }
   ];
+
+  const currentThemeId = getSavedTheme();
+  const currentTheme = THEMES[currentThemeId];
 
   const linksHtml = links.map(link => `
     <li>
@@ -27,6 +33,19 @@ export function renderNavbar(activeRoute = 'home') {
       </a>
     </li>
   `).join('');
+
+  // Build the quick-switch theme dropdown items
+  const themeDropdownItems = THEME_IDS.map(id => {
+    const t = THEMES[id];
+    const isActive = id === currentThemeId;
+    return `
+      <button class="theme-switch-item ${isActive ? 'is-active' : ''}" data-theme-switch="${id}" title="${t.name}" aria-pressed="${isActive}">
+        <span class="theme-switch-emoji" aria-hidden="true">${t.emoji}</span>
+        <span class="theme-switch-name">${t.name}</span>
+        <svg class="theme-switch-check" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="display:${isActive ? '' : 'none'};" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>
+      </button>
+    `;
+  }).join('');
 
   navContainer.innerHTML = `
     <div class="container navbar-inner">
@@ -58,6 +77,28 @@ export function renderNavbar(activeRoute = 'home') {
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
           </svg>
         </button>
+
+        <!-- Quick Theme Switcher -->
+        <div class="header-theme-switcher" id="header-theme-switcher">
+          <button class="header-theme-btn" id="header-theme-trigger" aria-label="Switch theme" title="Switch theme — ${currentTheme.name} active" aria-expanded="false" aria-haspopup="true">
+            <span class="header-theme-emoji" aria-hidden="true">${currentTheme.emoji}</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <div class="theme-dropdown" id="theme-dropdown" role="menu" aria-label="Theme switcher">
+            <div class="theme-dropdown-header">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M12 2a10 10 0 0 0 0 20"></path><path d="M12 2a10 10 0 0 1 0 20"></path><line x1="2" y1="12" x2="22" y2="12"></line></svg>
+              <span>Quick Theme Switch</span>
+            </div>
+            ${themeDropdownItems}
+            <div class="theme-dropdown-footer">
+              <a href="#themes" class="theme-dropdown-gallery-link" role="menuitem">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                Open Theme Gallery
+              </a>
+            </div>
+          </div>
+        </div>
+
         <button class="header-profile-btn" id="header-profile-trigger" title="View Student Academic Profile">
           <img src="${student.avatar}" alt="${student.name}" class="header-avatar-img" onerror="this.src='assets/images/avatar-placeholder.svg'">
           <span class="header-profile-name">${student.name.split(' ')[0]}</span>
@@ -92,5 +133,69 @@ export function renderNavbar(activeRoute = 'home') {
     profileBtn.onclick = () => {
       window.dispatchEvent(new CustomEvent('open-profile-modal'));
     };
+  }
+
+  // ── Theme Dropdown ────────────────────────────────────────────────────────
+  const themeTrigger = document.getElementById('header-theme-trigger');
+  const themeDropdown = document.getElementById('theme-dropdown');
+
+  if (themeTrigger && themeDropdown) {
+    themeTrigger.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = themeDropdown.classList.contains('is-open');
+      themeDropdown.classList.toggle('is-open', !isOpen);
+      themeTrigger.setAttribute('aria-expanded', String(!isOpen));
+    });
+
+    // Close when clicking outside
+    document.addEventListener('click', function closeDropdown(e) {
+      if (!document.getElementById('header-theme-switcher')?.contains(e.target)) {
+        themeDropdown.classList.remove('is-open');
+        themeTrigger.setAttribute('aria-expanded', 'false');
+        document.removeEventListener('click', closeDropdown);
+      }
+    });
+
+    // Close on Escape
+    document.addEventListener('keydown', function onEsc(e) {
+      if (e.key === 'Escape' && themeDropdown.classList.contains('is-open')) {
+        themeDropdown.classList.remove('is-open');
+        themeTrigger.setAttribute('aria-expanded', 'false');
+        themeTrigger.focus();
+        document.removeEventListener('keydown', onEsc);
+      }
+    });
+
+    // Handle theme switch clicks
+    themeDropdown.addEventListener('click', (e) => {
+      const item = e.target.closest('[data-theme-switch]');
+      if (item) {
+        const newThemeId = item.dataset.themeSwitch;
+        applyTheme(newThemeId);
+        const theme = THEMES[newThemeId];
+
+        // Update visual active state in dropdown immediately
+        themeDropdown.querySelectorAll('[data-theme-switch]').forEach(btn => {
+          const isActive = btn.dataset.themeSwitch === newThemeId;
+          btn.classList.toggle('is-active', isActive);
+          btn.setAttribute('aria-pressed', String(isActive));
+          const check = btn.querySelector('.theme-switch-check');
+          if (check) check.style.display = isActive ? '' : 'none';
+        });
+
+        // Update trigger emoji
+        const emojiEl = themeTrigger.querySelector('.header-theme-emoji');
+        if (emojiEl) emojiEl.textContent = theme.emoji;
+        themeTrigger.title = `Switch theme — ${theme.name} active`;
+
+        themeDropdown.classList.remove('is-open');
+        themeTrigger.setAttribute('aria-expanded', 'false');
+
+        // Import Toast dynamically to avoid circular deps
+        import('./toast.js').then(({ Toast }) => {
+          Toast.success(`${theme.emoji} ${theme.name} applied!`);
+        });
+      }
+    });
   }
 }

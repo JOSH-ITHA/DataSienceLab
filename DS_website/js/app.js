@@ -6,6 +6,7 @@
 import { renderNavbar } from './components/navbar.js';
 import { setupProfileModal, setupResumeModal } from './components/profileCard.js';
 import { setupGlobalSearch } from './components/globalSearch.js';
+import { initTheme } from './data/themes.js';
 
 class App {
   constructor() {
@@ -19,6 +20,9 @@ class App {
   }
 
   init() {
+    // Apply saved theme immediately (before any render)
+    initTheme();
+
     // Setup Modals
     this.profileModal = setupProfileModal();
     this.resumeModal = setupResumeModal();
@@ -61,7 +65,7 @@ class App {
     // Determine navbar active identifier
     let navActive = route;
     if (route === 'experiment-detail') navActive = 'experiments';
-    if (!['home', 'modules', 'experiments', 'tools', 'resources', 'projects'].includes(navActive)) {
+    if (!['home', 'modules', 'experiments', 'tools', 'resources', 'projects', 'themes', 'campus'].includes(navActive)) {
       navActive = 'home';
     }
 
@@ -149,6 +153,22 @@ class App {
         const page = await import('./pages/projectsPage.js');
         if (renderId !== this.routeRenderId) return;
         this.appRoot.innerHTML = page.renderProjectsPage();
+        break;
+      }
+
+      case 'themes': {
+        const page = await import('./pages/themesPage.js');
+        if (renderId !== this.routeRenderId) return;
+        this.appRoot.innerHTML = page.renderThemesPage();
+        page.attachThemesPageListeners();
+        break;
+      }
+
+      case 'campus': {
+        const page = await import('./pages/campusPage.js');
+        if (renderId !== this.routeRenderId) return;
+        this.appRoot.innerHTML = page.renderCampusPage();
+        page.attachCampusPageListeners(() => this.handleRoute());
         break;
       }
 
